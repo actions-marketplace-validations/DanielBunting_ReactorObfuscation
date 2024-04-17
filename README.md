@@ -39,7 +39,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Obfuscate .NET Assembly
-      uses: your-github-username/ReactorObfuscation@v1
+      uses: DanielBunting/ReactorObfuscation@v0.0.1
       with:
         project_file: 'path/to/your/project.nrproj'
         input_path: 'path/to/your/output/assembly.dll'
