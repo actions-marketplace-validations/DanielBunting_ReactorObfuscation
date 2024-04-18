@@ -17,9 +17,7 @@ runs:
     - name: Download dotNET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          if not exist "./dotnet-reactor/dotNET_Reactor.Console.exe" (
-            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip" -o dotNetReactor.zip
-          )
+          powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Invoke-WebRequest 'https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip' -OutFile 'dotNetReactor.zip' }"
         elif [ "${{ runner.os }}" = "Linux" ]; then
           if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
             curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/linux/dotNET_Reactor.zip" -o dotNetReactor.zip
@@ -34,11 +32,9 @@ runs:
     - name: Extract dotNET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          if not exist "./dotnet-reactor/dotNET_Reactor.Console.exe" (
-            7z x dotNetReactor.zip -o./dotnet-reactor
-          )
-        else
-          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
+          powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Expand-Archive 'dotNetReactor.zip' -DestinationPath './dotnet-reactor' }"
+        elif [ "${{ runner.os }}" = "Linux" ] || [ "${{ runner.os }}" = "macOS" ]; then
+          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ] || [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
             unzip dotNetReactor.zip -d dotnet-reactor
           fi
         fi
@@ -48,7 +44,10 @@ runs:
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           "./dotnet-reactor/dotNET_Reactor.Console.exe" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
-        else
+        elif [ "${{ runner.os }}" = "Linux" ]; then
+          chmod +x "./dotnet-reactor/dotNET_Reactor"
+          "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
+        elif [ "${{ runner.os }}" = "macOS" ]; then
           chmod +x "./dotnet-reactor/dotNET_Reactor"
           "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
         fi
