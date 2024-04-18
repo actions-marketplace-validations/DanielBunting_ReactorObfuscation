@@ -17,20 +17,30 @@ runs:
     - name: Download dotNET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip" -o dotNetReactor.zip
+          if not exist "./dotnet-reactor/dotNET_Reactor.Console.exe" (
+            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip" -o dotNetReactor.zip
+          )
         elif [ "${{ runner.os }}" = "Linux" ]; then
-          curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/linux/dotNET_Reactor.zip" -o dotNetReactor.zip
+          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
+            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/linux/dotNET_Reactor.zip" -o dotNetReactor.zip
+          fi
         elif [ "${{ runner.os }}" = "macOS" ]; then
-          curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/macos/dotNET_Reactor.zip" -o dotNetReactor.zip
+          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
+            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/macos/dotNET_Reactor.zip" -o dotNetReactor.zip
+          fi
         fi
       shell: bash
 
     - name: Extract dotNET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          7z x dotNetReactor.zip -o./dotnet-reactor
+          if not exist "./dotnet-reactor/dotNET_Reactor.Console.exe" (
+            7z x dotNetReactor.zip -o./dotnet-reactor
+          )
         else
-          unzip dotNetReactor.zip -d dotnet-reactor
+          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
+            unzip dotNetReactor.zip -d dotnet-reactor
+          fi
         fi
       shell: bash
 
