@@ -1,21 +1,30 @@
 # ReactorObfuscation GitHub Action
-The ReactorObfuscation GitHub Action allows you to automate the obfuscation of .NET assemblies using dotNET Reactor directly within your GitHub Actions workflows. This action supports running on Windows, Linux, and macOS, making it versatile for cross-platform .NET development environments.
+
+This is a workflow to integrate [Eziriz .NET Reactor](https://www.eziriz.com/dotnet_reactor.htm) obfuscator into your build actions. 
+
+This GitHub Action allows you to automate the obfuscation of .NET assemblies using .NET Reactor directly within your GitHub Actions workflows. This action supports running on Windows, Linux, and macOS, making it versatile for cross-platform .NET development environments.
 
 ## Features
-- Cross-Platform Support: Run obfuscation on Windows, Linux, and macOS.
-- Flexible Inputs: Specify custom paths to project files, input assemblies, and output locations.
-- Easy Integration: Seamlessly integrates with existing .NET projects and GitHub Actions workflows.
+
+- **Cross-Platform Support:** Run obfuscation on Windows, Linux, and macOS.
+- **Flexible Inputs:** Specify custom paths to project files, input assemblies, output locations, and license files.
+- **Easy Integration:** Seamlessly integrates with existing .NET projects and GitHub Actions workflows.
+
 ## Current Version
-The action uses dotNET Reactor version 6.9.8.0. Ensure that your project is compatible with this version of dotNET Reactor.
+
+The action uses dotNET Reactor version 6.9.8.0. Ensure that your project is compatible with this version of .NET Reactor.
 
 ## Inputs
+
 This action requires the following inputs:
 
-- project_file: The path to the dotNET Reactor project file. This file contains the configuration for the obfuscation process.
-- input_path: The path to the .NET assembly (.dll or .exe) that you want to obfuscate.
-- output_path: The destination path where the obfuscated assembly will be saved.
+- `project_file`: The path to the .NET Reactor project file. This file contains the configuration for the obfuscation process.
+- `input_path`: The path to the .NET assembly (.dll or .exe) that you want to obfuscate.
+- `output_path`: The destination path where the obfuscated assembly will be saved.
+- `license_file`: The path to the license file necessary for running .NET Reactor.
 
 ## Usage
+
 Here's how to use the ReactorObfuscation action in your workflow:
 
 ```yaml
@@ -44,10 +53,12 @@ jobs:
         project_file: 'path/to/your/project.nrproj'
         input_path: 'path/to/your/output/assembly.dll'
         output_path: 'path/to/your/output/assembly.dll'
+        license_file: 'path/to/your/license.license'
+
 ```
 
 ## Support and Contributions
 - Getting Support: If you encounter any issues while using this action, please open an issue in the GitHub repository.
-- Contributions: Contributions are welcome! If you'd like to improve the ReactorObfuscation action, please make a pull request.
+- Contributions: Contributions are welcome! If you'd like to improve this action, please make a pull request.
 ## License
-- This project is licensed under the MIT Licence - see the LICENCE file in the repository for details.
+- This project is licensed under the MIT Licence - see the LICENSE file in the repository for details.

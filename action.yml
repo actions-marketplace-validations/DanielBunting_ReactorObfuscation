@@ -1,8 +1,8 @@
-name: 'Run dotNET Reactor'
-description: 'Downloads, extracts, and runs dotNET Reactor based on the runner OS.'
+name: 'Run .NET Reactor'
+description: 'Downloads, extracts, and runs .NET Reactor based on the runner OS.'
 inputs:
   project_file:
-    description: 'Path to the dotNET Reactor project file.'
+    description: 'Path to the .NET Reactor project file.'
     required: true
   input_path:
     description: 'Input path of the .NET assembly to obfuscate.'
@@ -10,11 +10,14 @@ inputs:
   output_path:
     description: 'Output path for the obfuscated .NET assembly.'
     required: true
+  license_file:
+    description: 'Path to the license file.'
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Download dotNET Reactor
+    - name: Download .NET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Invoke-WebRequest 'https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip' -OutFile 'dotNetReactor.zip' }"
@@ -29,18 +32,20 @@ runs:
         fi
       shell: bash
 
-    - name: Extract dotNET Reactor
+    - name: Extract .NET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Expand-Archive 'dotNetReactor.zip' -DestinationPath './dotnet-reactor' }"
+          powershell -Command "Copy-Item '$GITHUB_WORKSPACE/${{ inputs.license_file }}' -Destination './dotnet-reactor/'"
         elif [ "${{ runner.os }}" = "Linux" ] || [ "${{ runner.os }}" = "macOS" ]; then
-          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ] || [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
+          if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
             unzip dotNetReactor.zip -d dotnet-reactor
           fi
+          cp "$GITHUB_WORKSPACE/${{ inputs.license_file }}" ./dotnet-reactor/
         fi
       shell: bash
 
-    - name: Execute dotNET Reactor
+    - name: Execute .NET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           "./dotnet-reactor/dotNET_Reactor.Console.exe" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
