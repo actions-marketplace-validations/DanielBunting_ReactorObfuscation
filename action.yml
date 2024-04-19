@@ -1,5 +1,9 @@
 name: 'Run .NET Reactor'
 description: 'Downloads, extracts, and runs .NET Reactor based on the runner OS.'
+author: 'Daniel Bunting'
+branding:
+  icon: 'lock'
+  color: 'blue'
 inputs:
   project_file:
     description: 'Path to the .NET Reactor project file.'
