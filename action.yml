@@ -15,8 +15,11 @@ inputs:
     description: 'Output path for the obfuscated .NET assembly.'
     required: true
   license_file:
-    description: 'Path to the license file.'
-    required: true
+    description: 'Path to the license file. Optional.'
+    required: false
+  additional_params:
+    description: 'Additional command line parameters for .NET Reactor. Optional.'
+    required: false
 
 runs:
   using: "composite"
@@ -45,19 +48,21 @@ runs:
           if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
             unzip dotNetReactor.zip -d dotnet-reactor
           fi
-          cp "$GITHUB_WORKSPACE/${{ inputs.license_file }}" ./dotnet-reactor/
+          if [ -n "${{ inputs.license_file }}" ] && [ "${{ inputs.license_file }}" != "" ]; then
+            cp "$GITHUB_WORKSPACE/${{ inputs.license_file }}" ./dotnet-reactor/
+          fi
         fi
       shell: bash
 
     - name: Execute .NET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          "./dotnet-reactor/dotNET_Reactor.Console.exe" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
+          "./dotnet-reactor/dotNET_Reactor.Console.exe" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}" ${{ inputs.additional_params }}
         elif [ "${{ runner.os }}" = "Linux" ]; then
           chmod +x "./dotnet-reactor/dotNET_Reactor"
-          "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
+          "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}" ${{ inputs.additional_params }}
         elif [ "${{ runner.os }}" = "macOS" ]; then
           chmod +x "./dotnet-reactor/dotNET_Reactor"
-          "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}"
+          "./dotnet-reactor/dotNET_Reactor" -file "$GITHUB_WORKSPACE/${{ inputs.input_path }}" -project "$GITHUB_WORKSPACE/${{ inputs.project_file }}" -targetfile "$GITHUB_WORKSPACE/${{ inputs.output_path }}" ${{ inputs.additional_params }}
         fi
       shell: bash
