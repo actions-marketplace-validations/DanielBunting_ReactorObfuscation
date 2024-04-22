@@ -21,7 +21,10 @@ This action requires the following inputs:
 - `project_file`: The path to the .NET Reactor project file. This file contains the configuration for the obfuscation process.
 - `input_path`: The path to the .NET assembly (.dll or .exe) that you want to obfuscate.
 - `output_path`: The destination path where the obfuscated assembly will be saved.
-- `license_file`: The path to the license file necessary for running .NET Reactor.
+- `license_file`: (Optional) The path to the license file necessary for running .NET Reactor. If omitted, .NET Reactor will run without a license file.
+- `version`: (Optional) Specifies the version of .NET Reactor to use. Defaults to "latest". Use specific version numbers to target a particular release.
+- `additional_params`: (Optional) Additional command line parameters to pass to the .NET Reactor CLI. This can be used to customize the obfuscation process further.
+
 
 ## Usage
 

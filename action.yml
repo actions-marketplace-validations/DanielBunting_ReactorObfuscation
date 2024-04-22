@@ -20,6 +20,10 @@ inputs:
   additional_params:
     description: 'Additional command line parameters for .NET Reactor. Optional.'
     required: false
+  version:
+    description: 'Version of the .NET Reactor to use, defaults to Latest.'
+    required: false
+    default: 'latest'
 
 runs:
   using: "composite"
@@ -27,14 +31,14 @@ runs:
     - name: Download .NET Reactor
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
-          powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Invoke-WebRequest 'https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/windows/dotNetReactor.zip' -OutFile 'dotNetReactor.zip' }"
+          powershell -Command "if (-Not (Test-Path './dotnet-reactor/dotNET_Reactor.Console.exe')) { Invoke-WebRequest 'https://raw.githubusercontent.com/eziriz/ReactorAction/main/versions/windows_${{ inputs.version }}.zip' -OutFile 'dotNetReactor.zip' }"
         elif [ "${{ runner.os }}" = "Linux" ]; then
           if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
-            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/linux/dotNET_Reactor.zip" -o dotNetReactor.zip
+            curl -L "https://raw.githubusercontent.com/eziriz/ReactorAction/main/versions/linux_${{ inputs.version }}.zip" -o dotNetReactor.zip
           fi
         elif [ "${{ runner.os }}" = "macOS" ]; then
           if [ ! -f "./dotnet-reactor/dotNET_Reactor" ]; then
-            curl -L "https://raw.githubusercontent.com/DanielBunting/ReactorObfuscation/main/dotnet-reactor/macos/dotNET_Reactor.zip" -o dotNetReactor.zip
+            curl -L "https://raw.githubusercontent.com/eziriz/ReactorAction/main/versions/macos_${{ inputs.version }}.zip" -o dotNetReactor.zip
           fi
         fi
       shell: bash
